@@ -37,10 +37,19 @@ namespace AspNetCoreIdentityEncryption
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
-            services.AddIdentity<IdentityUser, IdentityRole>(options => options.Stores.MaxLengthForKeys = 128)
+
+            services.AddIdentity<IdentityUser, IdentityRole>(options =>
+                {
+                    options.Stores.ProtectPersonalData = true;
+                    options.Stores.MaxLengthForKeys = 128;
+                })
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultUI()
                 .AddDefaultTokenProviders();
+
+            services.AddScoped<ILookupProtectorKeyRing, KeyRing>();
+            services.AddScoped<ILookupProtector, LookupProtector>();
+            services.AddScoped<IPersonalDataProtector, PersonalDataProtector>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
@@ -50,7 +59,6 @@ namespace AspNetCoreIdentityEncryption
         {
             if (env.IsDevelopment())
             {
-                app.UseBrowserLink();
                 app.UseDeveloperExceptionPage();
                 app.UseDatabaseErrorPage();
             }
