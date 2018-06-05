@@ -155,7 +155,7 @@ ASP.NET Core Identity will pass in the current key identifier, then prepend it t
 returned from your `Protect` method. When it comes to decrypt data Identity will extract the 
 key identifier from the cipher text and pass it into `Unprotect`.
 
-The sample implementation of the [LookupProtector](AspNetCoreIdentityEncryption\LookupProtector.cs) 
+The sample implementation of the [LookupProtector](AspNetCoreIdentityEncryption/LookupProtector.cs) 
 implements signed encryption using derived keys, as well as solving the 
 [indexing problem](#indexingProblem) by using the plain text as the IV. 
 
@@ -215,7 +215,7 @@ uses whatever `ILookupProtector` you wire up, but this will then be
 deterministic and open to cipher text analysis so this may not meet the 
 requirements your risk analysis or regulations require.
 
-The sample [PersonalDataProtector](AspNetCoreIdentityEncryption\PersonalProtector.cs) 
+The sample [PersonalDataProtector](AspNetCoreIdentityEncryption/PersonalDataProtector.cs) 
 avoids the cryptanalysis issue by ensuring data is encrypted with a random IV, it's basically
 a clone of the `ILookupProtector` implementation with different derived keys, and no IV 
 generation from source data. You will see that `IPersonalDataProtector` 
@@ -224,7 +224,7 @@ require a key ring. The sample implementation however uses the same
 keyring implementation as its source for keys and embeds the key identifier
 in the encryption results, extracting it during decryption.
 
-Once we have an implementation of [IPersonalDataProtector] we put it into DI:
+Once we have an implementation of IPersonalDataProtector we put it into DI:
 
 ```c#
 services.AddIdentity<IdentityUser, IdentityRole>(options =>
